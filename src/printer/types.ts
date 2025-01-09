@@ -1,18 +1,18 @@
 import type { View } from 'react-native';
 import type {
-  PrinterModelLang,
+  BarcodeHRI,
+  BarcodeType,
   ColorType,
+  CommonParams,
+  FontType,
+  ImageColorModeType,
   ImageCompressType,
   ImageHalftoneType,
-  ImageColorModeType,
   PrinterAddCutType,
-  FontType,
-  BarcodeType,
-  BarcodeHRI,
   PrinterAddPulseDrawerType,
   PrinterAddPulseTimeType,
+  PrinterModelLang,
   TextAlignType,
-  CommonParams,
   TextLangType,
 } from './constants';
 
@@ -150,3 +150,13 @@ export interface AddViewShotParams {
 }
 
 export type AddTextLangParam = TextLangType | CommonParams.PARAM_DEFAULT;
+
+export type PrintFormattedText = {
+  rowSettings: {
+    size: number;
+    bold: boolean;
+    width: number;
+    alignment: 'left' | 'center' | 'right';
+  }[];
+  rowData: string[];
+};

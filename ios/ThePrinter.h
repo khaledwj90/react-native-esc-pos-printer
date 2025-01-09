@@ -146,6 +146,10 @@
  */
 -(int) endTransaction;
 
+// Prints the multilingual text image
+- (int) printFormattedText:(NSArray * _Nonnull)settings
+                     rowData:(NSArray * _Nonnull)row;
+
 @end
 
 #endif /* ThePrinter_h */

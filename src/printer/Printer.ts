@@ -19,6 +19,7 @@ import type {
   AddTextSmoothParam,
   AddTextStyleParams,
   PrinterParams,
+  PrintFormattedText,
 } from './types';
 
 export class Printer {
@@ -154,5 +155,9 @@ export class Printer {
 
   clearCommandBuffer = () => {
     return this.printerWrapper.clearCommandBuffer();
+  };
+
+  printFormattedText = (params: PrintFormattedText) => {
+    return this.printerWrapper.printFormattedText(params);
   };
 }

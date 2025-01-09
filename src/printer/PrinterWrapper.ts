@@ -4,11 +4,11 @@ import {
   ConnectPrinterErrorMessageMapping,
   DisconnectPrinterErrorMessageMapping,
   InitPrinterErrorMessageMapping,
-  PrintErrorCodeMessageMapping,
   PrinterConstants,
   PrinterErrorCodeStatusMapping,
   PrinterErrorStatusMapping,
   PrinterGetSettingsType,
+  PrintErrorCodeMessageMapping,
   SendDataPrinterErrorMessageMapping,
 } from './constants';
 import type {
@@ -23,6 +23,7 @@ import type {
   AddTextSmoothParam,
   AddTextStyleParams,
   PrinterInitParams,
+  PrintFormattedText,
 } from './types';
 import {
   BufferHelper,
@@ -407,6 +408,20 @@ export class PrinterWrapper {
     } catch (error) {
       throwProcessedError({
         methodName: 'addTextStyle',
+        errorCode: error.message,
+        messagesMapping: CommonOperationErrorMessageMapping,
+      });
+    }
+  };
+
+  printFormattedText = async ({ rowSettings, rowData }: PrintFormattedText) => {
+    try {
+      // Call the native bridge (EscPosPrinter)
+      await EscPosPrinter.printFormattedText(this.target, rowSettings, rowData);
+    } catch (error) {
+      // Process and throw structured errors
+      throwProcessedError({
+        methodName: 'printFormattedText',
         errorCode: error.message,
         messagesMapping: CommonOperationErrorMessageMapping,
       });

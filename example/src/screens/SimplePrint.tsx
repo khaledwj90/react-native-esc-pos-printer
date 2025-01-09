@@ -1,4 +1,4 @@
-import { useRoute, type RouteProp } from '@react-navigation/native';
+import { type RouteProp, useRoute } from '@react-navigation/native';
 import { memo, useEffect, useMemo, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import {
@@ -109,6 +109,80 @@ export const SimplePrint = memo(() => {
           width: 2,
           height: 50,
         });
+        await printerInstance.addFeedLine(2);
+        await printerInstance.addSymbol({
+          type: PrinterConstants.SYMBOL_QRCODE_MODEL_2,
+          level: PrinterConstants.LEVEL_M,
+          size: 5,
+          data: 'Test123',
+        });
+        await printerInstance.printFormattedText({
+          rowSettings: [
+            { size: 30, bold: true, width: 0.5, alignment: 'center' },
+            { size: 30, bold: true, width: 0.5, alignment: 'center' },
+          ],
+          rowData: ['خالد الجعبري', 'Mohamed jabari'],
+        });
+        await printerInstance.addFeedLine(2);
+
+        await printerInstance.addTextSize({ width: 3, height: 3 });
+        await printerInstance.addText('DUDE!');
+        await printerInstance.addFeedLine();
+        await printerInstance.addTextSmooth(PrinterConstants.TRUE);
+        await printerInstance.addText('DUDE!');
+        await printerInstance.addTextSmooth(PrinterConstants.FALSE);
+        await printerInstance.addTextSize({ width: 1, height: 1 });
+        await printerInstance.addText('is that a ');
+        await printerInstance.addFeedLine();
+        await printerInstance.addTextStyle({
+          em: PrinterConstants.TRUE,
+          ul: PrinterConstants.TRUE,
+          color: PrinterConstants.PARAM_UNSPECIFIED,
+        } as const);
+
+        await printerInstance.addText('printer?');
+        await printerInstance.addFeedLine();
+        await printerInstance.addTextStyle(); // reset styles
+        await printerInstance.addTextAlign(PrinterConstants.ALIGN_LEFT);
+        await printerInstance.addText('Left');
+        await printerInstance.addFeedLine();
+        await printerInstance.addTextAlign(PrinterConstants.ALIGN_RIGHT);
+        await printerInstance.addText('Right');
+        await printerInstance.addFeedLine();
+        await printerInstance.addTextSize({ width: 1, height: 1 });
+        await Printer.addTextLine(printerInstance, {
+          left: 'Cheesburger',
+          right: '3 EUR',
+          gapSymbol: '_',
+        });
+        await printerInstance.addFeedLine();
+        await printerInstance.addTextSize({ width: 1, height: 1 });
+        await Printer.addTextLine(printerInstance, {
+          left: 'Chickenburger',
+          right: '1.5 EUR',
+          gapSymbol: '.',
+        });
+        await printerInstance.addFeedLine();
+        await printerInstance.addTextSize({ width: 2, height: 2 });
+        await Printer.addTextLine(printerInstance, {
+          left: 'Happy Meal',
+          right: '7 EUR',
+          gapSymbol: '.',
+        });
+        await printerInstance.addFeedLine();
+        await printerInstance.addTextAlign(PrinterConstants.ALIGN_CENTER);
+        await printerInstance.addImage({
+          source: require('../store.png'),
+          width: 100,
+        });
+        await printerInstance.addFeedLine();
+        await printerInstance.addBarcode({
+          data: 'Test123',
+          type: PrinterConstants.BARCODE_CODE93,
+          hri: PrinterConstants.HRI_BELOW,
+          width: 2,
+          height: 50,
+        });
 
         await printerInstance.addSymbol({
           type: PrinterConstants.SYMBOL_QRCODE_MODEL_2,
@@ -128,6 +202,7 @@ export const SimplePrint = memo(() => {
         setStatus(res);
       }
     } catch (e) {
+      console.log('Error while print: ', e);
       await printerInstance.disconnect();
     } finally {
       setPrinting(false);

@@ -570,4 +570,128 @@
 {
 
 }
+
+
+- (UIImage *)drawText:(NSArray<NSDictionary*> *)settings
+            rowData:(NSArray<NSString*> *)row {
+    // Setup paper size
+    CGFloat paperWidth = 550.0;
+
+    NSMutableArray<NSAttributedString *> *attributeTexts = [NSMutableArray new];
+    NSMutableArray<NSValue *> *rectSizes = [NSMutableArray new];
+
+    CGFloat maxHeight = 0;
+
+    for (int index = 0; index < row.count; index++) {
+        // Fetch values from row and settings
+        NSDictionary *columnSetting = settings[index];
+        NSString *columnValue = row[index];
+
+        NSString *alignment = columnSetting[@"alignment"];
+        CGFloat fontSize = [columnSetting[@"size"] floatValue];
+        BOOL isBold = [columnSetting[@"bold"] boolValue];
+        CGFloat columnWidthFraction = [columnSetting[@"width"] floatValue];
+
+        // Setup paragraph and font
+        NSMutableParagraphStyle *paragraph = [[NSMutableParagraphStyle alloc] init];
+      NSLog(@"[DEBUG] textValue: %@",alignment);
+        if ([alignment isEqualToString:@"center"]) {
+            paragraph.alignment = NSTextAlignmentCenter;
+        } else if ([alignment isEqualToString:@"left"]) {
+            paragraph.alignment = NSTextAlignmentLeft;
+        } else {
+            paragraph.alignment = NSTextAlignmentRight;
+        }
+
+        UIFont *font;
+        if (isBold) {
+            font = [UIFont boldSystemFontOfSize:fontSize];
+        } else {
+            font = [UIFont systemFontOfSize:fontSize];
+        }
+
+        NSDictionary *attributes = @{
+            NSFontAttributeName: font,
+            NSParagraphStyleAttributeName: paragraph
+        };
+        NSAttributedString *attributedText = [[NSAttributedString alloc] initWithString:columnValue attributes:attributes];
+        [attributeTexts addObject:attributedText];
+
+      // Calculate dimensions
+      CGFloat columnWidth = paperWidth * columnWidthFraction;
+      NSLog(@"[DEBUG] column width: %f", columnWidth);
+
+      CGSize boundingBox = CGSizeMake(columnWidth, CGFLOAT_MAX);
+
+      // Include NSStringDrawingUsesFontLeading
+      CGRect rect = [attributedText boundingRectWithSize:boundingBox
+                                                 options:(NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading)
+                                                 context:nil];
+
+      // Explicitly set the width to always match the column width
+      CGSize finalSize = CGSizeMake(columnWidth, rect.size.height);
+
+      // Wrap the size in NSValue and append it to the array
+      [rectSizes addObject:[NSValue valueWithCGSize:finalSize]];
+
+        if (rect.size.height > maxHeight) {
+            maxHeight = rect.size.height;
+        }
+    }
+
+    // Draw image renderer
+    CGSize canvasSize = CGSizeMake(paperWidth, maxHeight);
+    UIGraphicsImageRenderer *renderer = [[UIGraphicsImageRenderer alloc] initWithSize:canvasSize];
+
+    UIImage *image = [renderer imageWithActions:^(UIGraphicsImageRendererContext * _Nonnull context) {
+        CGFloat currentX = 0.0;
+
+        for (int index = 0; index < row.count; index++) {
+            NSAttributedString *attributedText = attributeTexts[index];
+            CGSize size = rectSizes[index].CGSizeValue;
+
+            CGRect rect = CGRectMake(currentX, 0, size.width, size.height);
+            [attributedText drawWithRect:rect options:NSStringDrawingUsesLineFragmentOrigin context:nil];
+
+            currentX += size.width;
+        }
+    }];
+
+    return image;
+}
+
+
+- (int) printFormattedText:(NSArray * _Nonnull)settings
+                    rowData:(NSArray * _Nonnull)row
+                     {
+    @synchronized (self) {
+         if (epos2Printer_ == nil) {
+             return EPOS2_ERR_MEMORY;
+         }
+
+         // Generate the image from the provided text
+         UIImage *renderedImage = [self drawText:settings rowData:row];
+
+         if (renderedImage == nil) {
+             return EPOS2_ERR_FAILURE;
+         }
+
+         // Send the image to the printer
+      int result = [epos2Printer_ addImage:renderedImage
+                                            x:0
+                                            y:0
+                                        width:renderedImage.size.width
+                                       height:renderedImage.size.height
+                                        color:EPOS2_COLOR_1
+                                         mode:EPOS2_PARAM_DEFAULT
+                                     halftone:EPOS2_PARAM_DEFAULT
+                                   brightness:1.0
+                                     compress:EPOS2_PARAM_DEFAULT];
+         return result;
+    }
+}
+
 @end
+
+
+

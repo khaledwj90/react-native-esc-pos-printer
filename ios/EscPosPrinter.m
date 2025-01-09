@@ -528,4 +528,31 @@ RCT_EXPORT_METHOD(getPrinterSetting:(nonnull NSString*) target
     }
 }
 
+RCT_EXPORT_METHOD(printFormattedText:(nonnull NSString*)target
+                  rowSettings:(NSArray *)settings
+                  rowData:(NSArray *)row
+                  withResolver:(RCTPromiseResolveBlock)resolve
+                  withRejecter:(RCTPromiseRejectBlock)reject)
+{
+    int result = EPOS2_SUCCESS;
+
+    @synchronized (self) {
+        ThePrinter* thePrinter = [objManager_ getObject:target];
+        if (thePrinter == nil) {
+            reject(@"event_failure", [@([EposStringHelper getInitErrorResultCode]) stringValue], nil);
+            return;
+        }
+
+        result = [thePrinter printFormattedText:settings rowData:row];
+
+        if (result == EPOS2_SUCCESS) {
+            resolve(@(EPOS2_SUCCESS));
+        } else {
+            NSString *error = [NSString stringWithFormat:@"Failed to print printFormattedText text. Error code: %d", result];
+            reject(@"event_failure", error, nil);
+        }
+    }
+}
+
+
 @end
