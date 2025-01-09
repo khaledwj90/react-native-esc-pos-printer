@@ -572,8 +572,7 @@
 }
 
 
-- (UIImage *)drawText:(NSArray<NSDictionary*> *)settings
-            rowData:(NSArray<NSString*> *)row {
+- (UIImage *)drawText:(NSArray<NSDictionary*> *)row {
     // Setup paper size
     CGFloat paperWidth = 550.0;
 
@@ -584,9 +583,9 @@
 
     for (int index = 0; index < row.count; index++) {
         // Fetch values from row and settings
-        NSDictionary *columnSetting = settings[index];
-        NSString *columnValue = row[index];
+        NSDictionary *columnSetting = row[index];
 
+        NSString *text = columnSetting[@"text"];
         NSString *alignment = columnSetting[@"alignment"];
         CGFloat fontSize = [columnSetting[@"size"] floatValue];
         BOOL isBold = [columnSetting[@"bold"] boolValue];
@@ -614,7 +613,7 @@
             NSFontAttributeName: font,
             NSParagraphStyleAttributeName: paragraph
         };
-        NSAttributedString *attributedText = [[NSAttributedString alloc] initWithString:columnValue attributes:attributes];
+        NSAttributedString *attributedText = [[NSAttributedString alloc] initWithString:text attributes:attributes];
         [attributeTexts addObject:attributedText];
 
       // Calculate dimensions
@@ -661,8 +660,7 @@
 }
 
 
-- (int) printFormattedText:(NSArray * _Nonnull)settings
-                    rowData:(NSArray * _Nonnull)row
+- (int) printFormattedText:(NSArray * _Nonnull)row
                      {
     @synchronized (self) {
          if (epos2Printer_ == nil) {
@@ -670,7 +668,7 @@
          }
 
          // Generate the image from the provided text
-         UIImage *renderedImage = [self drawText:settings rowData:row];
+         UIImage *renderedImage = [self drawText:row];
 
          if (renderedImage == nil) {
              return EPOS2_ERR_FAILURE;

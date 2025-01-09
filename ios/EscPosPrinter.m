@@ -529,8 +529,7 @@ RCT_EXPORT_METHOD(getPrinterSetting:(nonnull NSString*) target
 }
 
 RCT_EXPORT_METHOD(printFormattedText:(nonnull NSString*)target
-                  rowSettings:(NSArray *)settings
-                  rowData:(NSArray *)row
+                  rowSettings:(NSArray *)row
                   withResolver:(RCTPromiseResolveBlock)resolve
                   withRejecter:(RCTPromiseRejectBlock)reject)
 {
@@ -543,7 +542,7 @@ RCT_EXPORT_METHOD(printFormattedText:(nonnull NSString*)target
             return;
         }
 
-        result = [thePrinter printFormattedText:settings rowData:row];
+        result = [thePrinter printFormattedText:row];
 
         if (result == EPOS2_SUCCESS) {
             resolve(@(EPOS2_SUCCESS));

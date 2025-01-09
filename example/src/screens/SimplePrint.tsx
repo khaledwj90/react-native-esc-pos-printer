@@ -118,10 +118,21 @@ export const SimplePrint = memo(() => {
         });
         await printerInstance.printFormattedText({
           rowSettings: [
-            { size: 30, bold: true, width: 0.5, alignment: 'center' },
-            { size: 30, bold: true, width: 0.5, alignment: 'center' },
+            {
+              size: 30,
+              bold: true,
+              width: 0.5,
+              alignment: 'center',
+              text: 'Khaled',
+            },
+            {
+              size: 30,
+              bold: true,
+              width: 0.5,
+              alignment: 'center',
+              text: 'Ahmed',
+            },
           ],
-          rowData: ['خالد الجعبري', 'Mohamed jabari'],
         });
         await printerInstance.addFeedLine(2);
 

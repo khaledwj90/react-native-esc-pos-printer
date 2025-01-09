@@ -153,10 +153,10 @@ export type AddTextLangParam = TextLangType | CommonParams.PARAM_DEFAULT;
 
 export type PrintFormattedText = {
   rowSettings: {
+    text: string;
     size: number;
     bold: boolean;
     width: number;
     alignment: 'left' | 'center' | 'right';
   }[];
-  rowData: string[];
 };

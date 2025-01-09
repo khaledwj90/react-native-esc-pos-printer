@@ -414,10 +414,10 @@ export class PrinterWrapper {
     }
   };
 
-  printFormattedText = async ({ rowSettings, rowData }: PrintFormattedText) => {
+  printFormattedText = async ({ rowSettings }: PrintFormattedText) => {
     try {
       // Call the native bridge (EscPosPrinter)
-      await EscPosPrinter.printFormattedText(this.target, rowSettings, rowData);
+      await EscPosPrinter.printFormattedText(this.target, rowSettings);
     } catch (error) {
       // Process and throw structured errors
       throwProcessedError({
