@@ -1,6 +1,6 @@
 {
   "name": "@khaledjabari/react-native-esc-pos-printer",
-  "version": "4.4.0",
+  "version": "4.5.0",
   "description": "s",
   "source": "./src/index.tsx",
   "main": "./lib/commonjs/index.js",
