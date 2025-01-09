@@ -1,5 +1,5 @@
 {
-  "name": "@khaledjabari/react-native-esc-pos-printer",
+  "name": "react-native-esc-pos-printer",
   "version": "4.3.3",
   "description": "s",
   "source": "./src/index.tsx",
@@ -54,13 +54,13 @@
     "ios",
     "android"
   ],
-  "repository": "https://github.com/tr3v3r/react-native-esc-pos-printer",
+  "repository": "https://github.com/khaledwj90/react-native-esc-pos-printer",
   "author": "Aliaksei Astafyeu <lochost40@gmail.com> (https://github.com/tr3v3r)",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/tr3v3r/react-native-esc-pos-printer/issues"
   },
-  "homepage": "https://github.com/tr3v3r/react-native-esc-pos-printer#readme",
+  "homepage": "https://github.com/khaledwj90/react-native-esc-pos-printer#readme",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
